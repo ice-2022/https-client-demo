@@ -1,14 +1,5 @@
-# https-client-lab
+package cn.params.lab;
 
-实验一个异步的支持https的客户端，使用原生nio和ssl库实现
-
-## 说明
-
-因为实验性质，只支持GET请求，主要验证https的客户端实现和异步http请求的实现
-
-## 用例
-
-```java
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         HttpClient client = new HttpClient();
@@ -22,4 +13,3 @@ public class Main {
         Thread.sleep(1000);
     }
 }
-```

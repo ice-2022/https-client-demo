@@ -4,23 +4,25 @@ import java.nio.ByteBuffer;
 
 public class HttpRequestParser {
 
-    private final ByteBuffer currentBuffer = ByteBuffer.allocate(1024);
-    private final HttpRequest request = new HttpRequest();
-
-    public void parse(String url) {
+    public static HttpRequest parse(String url) {
+        ByteBuffer currentBuffer = ByteBuffer.allocate(1024);
         ByteBuffer buffer = ByteBuffer.wrap(url.getBytes());
+        HttpRequest request = new HttpRequest();
 
         // 解析scheme
-        parseProtocol(buffer);
+        parseProtocol(buffer, currentBuffer, request);
 
         // 解析 host port
-        parseHostAndPort(buffer);
+        parseHostAndPort(buffer, currentBuffer, request);
 
         // 解析 path
-        parsePath(buffer);
+        parsePath(buffer, currentBuffer, request);
+
+        return request;
     }
 
-    void parseProtocol(ByteBuffer buffer) {
+
+    static void parseProtocol(ByteBuffer buffer, ByteBuffer currentBuffer, HttpRequest request) {
         while (buffer.hasRemaining()) {
             byte b = buffer.get();
             if (b == ':') {
@@ -34,7 +36,7 @@ public class HttpRequestParser {
         }
     }
 
-    void parseHostAndPort(ByteBuffer buffer) {
+    static void parseHostAndPort(ByteBuffer buffer, ByteBuffer currentBuffer, HttpRequest request) {
         currentBuffer.clear();
 
         // 跳过2个//
@@ -84,7 +86,7 @@ public class HttpRequestParser {
         }
     }
 
-    void parsePath(ByteBuffer buffer) {
+    static void parsePath(ByteBuffer buffer, ByteBuffer currentBuffer, HttpRequest request) {
         currentBuffer.clear();
         if (buffer.hasRemaining()) {
             byte[] bytes = new byte[buffer.remaining()];
@@ -93,9 +95,5 @@ public class HttpRequestParser {
         } else {
             request.setPath("/");
         }
-    }
-
-    public HttpRequest getRequest() {
-        return request;
     }
 }

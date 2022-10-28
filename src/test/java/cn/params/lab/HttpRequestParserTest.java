@@ -9,78 +9,87 @@ public class HttpRequestParserTest {
 
     @Test
     void testParseProtocol() {
+        ByteBuffer currentBuffer = ByteBuffer.allocate(1024);
+        HttpRequest request = new HttpRequest();
         String url = "http://api.com/api/content?fdfd=23";
         ByteBuffer buffer = ByteBuffer.wrap(url.getBytes());
-        HttpRequestParser parser = new HttpRequestParser();
-        parser.parseProtocol(buffer);
-        Assertions.assertEquals("http", parser.getRequest().getProtocol());
+
+        HttpRequestParser.parseProtocol(buffer, currentBuffer, request);
+        Assertions.assertEquals("http", request.getProtocol());
     }
 
     @Test
     void testParseProtocol_Https() {
+        ByteBuffer currentBuffer = ByteBuffer.allocate(1024);
+        HttpRequest request = new HttpRequest();
         String url = "https://api.com/api/content?fdfd=23";
         ByteBuffer buffer = ByteBuffer.wrap(url.getBytes());
-        HttpRequestParser parser = new HttpRequestParser();
-        parser.parseProtocol(buffer);
-        Assertions.assertEquals("https", parser.getRequest().getProtocol());
+
+        HttpRequestParser.parseProtocol(buffer, currentBuffer, request);
+        Assertions.assertEquals("https", request.getProtocol());
     }
 
     @Test
     void testParseHostAndPort() {
+        ByteBuffer currentBuffer = ByteBuffer.allocate(1024);
+        HttpRequest request = new HttpRequest();
         String url = "http://api.com/api/content?fdfd=23";
         ByteBuffer buffer = ByteBuffer.wrap(url.getBytes());
-        HttpRequestParser parser = new HttpRequestParser();
-        parser.parseProtocol(buffer);
-        parser.parseHostAndPort(buffer);
-        Assertions.assertEquals("api.com", parser.getRequest().getHost());
-        Assertions.assertEquals(80, parser.getRequest().getPort());
+
+        HttpRequestParser.parseProtocol(buffer, currentBuffer, request);
+        HttpRequestParser.parseHostAndPort(buffer, currentBuffer, request);
+        Assertions.assertEquals("api.com", request.getHost());
+        Assertions.assertEquals(80, request.getPort());
     }
 
     @Test
     void testParseHostAndPort_WithPort() {
+        ByteBuffer currentBuffer = ByteBuffer.allocate(1024);
+        HttpRequest request = new HttpRequest();
         String url = "http://api.com:9527/api/content?fdfd=23";
         ByteBuffer buffer = ByteBuffer.wrap(url.getBytes());
-        HttpRequestParser parser = new HttpRequestParser();
-        parser.parseProtocol(buffer);
-        parser.parseHostAndPort(buffer);
-        Assertions.assertEquals("api.com", parser.getRequest().getHost());
-        Assertions.assertEquals(9527, parser.getRequest().getPort());
+
+        HttpRequestParser.parseProtocol(buffer, currentBuffer, request);
+        HttpRequestParser.parseHostAndPort(buffer, currentBuffer, request);
+        Assertions.assertEquals("api.com", request.getHost());
+        Assertions.assertEquals(9527, request.getPort());
     }
 
     @Test
     void testParsePath() {
+        ByteBuffer currentBuffer = ByteBuffer.allocate(1024);
+        HttpRequest request = new HttpRequest();
         String url = "http://api.com/api/content?fdfd=23";
         ByteBuffer buffer = ByteBuffer.wrap(url.getBytes());
-        HttpRequestParser parser = new HttpRequestParser();
-        parser.parseProtocol(buffer);
-        parser.parseHostAndPort(buffer);
-        parser.parsePath(buffer);
-        Assertions.assertEquals("/api/content?fdfd=23", parser.getRequest().getPath());
+
+        HttpRequestParser.parseProtocol(buffer, currentBuffer, request);
+        HttpRequestParser.parseHostAndPort(buffer, currentBuffer, request);
+        HttpRequestParser.parsePath(buffer, currentBuffer, request);
+        Assertions.assertEquals("/api/content?fdfd=23", request.getPath());
     }
 
     @Test
     void testParsePath_EMPTY() {
+        ByteBuffer currentBuffer = ByteBuffer.allocate(1024);
+        HttpRequest request = new HttpRequest();
         String url = "http://api.com";
         ByteBuffer buffer = ByteBuffer.wrap(url.getBytes());
-        HttpRequestParser parser = new HttpRequestParser();
-        parser.parseProtocol(buffer);
-        parser.parseHostAndPort(buffer);
-        parser.parsePath(buffer);
-        Assertions.assertEquals("/", parser.getRequest().getPath());
+
+        HttpRequestParser.parseProtocol(buffer, currentBuffer, request);
+        HttpRequestParser.parseHostAndPort(buffer, currentBuffer, request);
+        HttpRequestParser.parsePath(buffer, currentBuffer, request);
+        Assertions.assertEquals("/", request.getPath());
     }
 
     @Test
     void testParse() {
         String url = "https://api.com/api/name?key=game";
-        ByteBuffer buffer = ByteBuffer.wrap(url.getBytes());
-        HttpRequestParser parser = new HttpRequestParser();
-        parser.parseProtocol(buffer);
-        parser.parseHostAndPort(buffer);
-        parser.parsePath(buffer);
-        Assertions.assertEquals("https", parser.getRequest().getProtocol());
-        Assertions.assertEquals("api.com", parser.getRequest().getHost());
-        Assertions.assertEquals(443, parser.getRequest().getPort());
-        Assertions.assertEquals("/api/name?key=game", parser.getRequest().getPath());
+        HttpRequest request = HttpRequestParser.parse(url);
+
+        Assertions.assertEquals("https", request.getProtocol());
+        Assertions.assertEquals("api.com", request.getHost());
+        Assertions.assertEquals(443, request.getPort());
+        Assertions.assertEquals("/api/name?key=game", request.getPath());
     }
 
 }
