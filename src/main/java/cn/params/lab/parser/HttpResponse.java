@@ -1,4 +1,4 @@
-package cn.params.lab;
+package cn.params.lab.parser;
 
 import lombok.Data;
 

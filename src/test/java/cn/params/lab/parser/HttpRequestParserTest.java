@@ -1,4 +1,4 @@
-package cn.params.lab;
+package cn.params.lab.parser;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

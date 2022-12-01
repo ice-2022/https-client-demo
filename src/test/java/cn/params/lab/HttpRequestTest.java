@@ -1,5 +1,6 @@
 package cn.params.lab;
 
+import cn.params.lab.parser.HttpRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
