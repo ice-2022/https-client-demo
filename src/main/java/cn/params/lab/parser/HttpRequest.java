@@ -11,6 +11,11 @@ public class HttpRequest {
     private String path;
     private final Map<String, String> headers = new HashMap<>();
 
+    public HttpRequest() {
+        headers.put("User-Agent", "curl/7.84.0");
+        headers.put("Accept", "*/*");
+    }
+
     public String string() {
         StringBuilder headerContent = new StringBuilder();
         headers.forEach((name, value) -> {
@@ -41,6 +46,7 @@ public class HttpRequest {
 
     public void setHost(String host) {
         this.host = host;
+        this.headers.put("Host", host);
     }
 
     public int getPort() {
